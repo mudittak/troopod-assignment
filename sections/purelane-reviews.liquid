@@ -1,0 +1,74 @@
+{{ 'purelane-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="pl-scope pl-sec" id="{{ section.id }}" data-scene="1">
+  <div class="pl-wrap">
+    <div class="pl-revhead pl-rv">
+      {%- if section.settings.kicker != blank -%}<span class="pl-kicker">{{ section.settings.kicker }}</span>{%- endif -%}
+      {%- if section.settings.rating != blank -%}
+        <span class="pl-agg"><span class="pl-st">★★★★★</span> <b>{{ section.settings.rating }}</b> from {{ section.settings.review_count }}</span>
+      {%- endif -%}
+      {%- if section.settings.homes_count != blank -%}
+        <span class="pl-agg">Loved by <b>{{ section.settings.homes_count }}</b> homes</span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="pl-revrail pl-rv" aria-label="Customer reviews">
+    <div class="pl-revtrack" data-pl-revtrack>
+      {%- for block in section.blocks -%}
+        <article class="pl-glass-2 pl-rcard" {{ block.shopify_attributes }}>
+          <div class="pl-st" aria-hidden="true">
+            {%- for i in (1..5) -%}{%- if i <= block.settings.stars -%}★{%- else -%}☆{%- endif -%}{%- endfor -%}
+          </div>
+          <h5>{{ block.settings.title }}</h5>
+          <p>{{ block.settings.quote }}</p>
+          <div class="pl-who">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+            <b>{{ block.settings.author }}</b>
+            {%- if block.settings.product_label != blank -%}<span>· {{ block.settings.product_label }}</span>{%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'purelane-sections.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Purelane: Reviews rail",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "That's what they said" },
+    { "type": "text", "id": "rating", "label": "Aggregate rating", "default": "4.8" },
+    { "type": "text", "id": "review_count", "label": "Review count text", "default": "8,000+ reviews" },
+    { "type": "text", "id": "homes_count", "label": "Homes count text", "default": "12 lakh+" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "stars", "label": "Stars", "min": 1, "max": 5, "default": 5 },
+        { "type": "text", "id": "title", "label": "Title", "default": "Works like a charm" },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Finally an eco option that cleans as well as the chemical detergent I used for years." },
+        { "type": "text", "id": "author", "label": "Author", "default": "Anita" },
+        { "type": "text", "id": "product_label", "label": "Product label", "default": "Laundry detergent" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane: Reviews rail",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review", "settings": { "title": "Best dishwash ever", "quote": "Our old dishwash left my help with dry, cracked skin. That stopped after we switched.", "author": "Priya", "product_label": "Dishwash gel" } },
+        { "type": "review", "settings": { "title": "Dog friendly", "quote": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.", "author": "Rohit S.", "product_label": "Floor cleaner" } },
+        { "type": "review", "settings": { "title": "Sparkling taps again", "quote": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off.", "author": "Verified buyer", "product_label": "Tap cleaner" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
